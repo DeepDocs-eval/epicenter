@@ -17,9 +17,9 @@ function createBackoff() {
 	// Zone 3 — Public API
 	return {
 		async sleep() {
-			const delay = Math.min(500 * 2 ** retries, 30_000);
-			const ms = delay * (0.5 + Math.random() * 0.5);
-			retries += 1;
+            const exponential = Math.min(BASE_DELAY_MS * 2 ** retries, MAX_DELAY_MS);
+            const ms = exponential * (0.5 + Math.random() * 0.5);
+            retries += 1;
 
 			const { promise, resolve } = Promise.withResolvers<void>();
 			const handle = setTimeout(resolve, ms);

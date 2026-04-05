@@ -22,7 +22,7 @@ The full list of imports used in this guide:
 |---------|-----------------|
 | `@epicenter/workspace` | `defineWorkspace`, `defineTable`, `createWorkspace` |
 | `@epicenter/workspace/extensions/sync` | `createSyncExtension` |
-| `@epicenter/workspace/extensions/sync/web` | `indexeddbPersistence` |
+| `@epicenter/workspace/extensions/persistence/indexeddb` | `indexeddbPersistence` |
 | `@epicenter/workspace/extensions/sync/broadcast-channel` | `broadcastChannelSync` |
 | `@epicenter/workspace/shared/crypto` | `bytesToBase64`, `base64ToBytes` |
 | `better-auth/client` | `createAuthClient` |

@@ -48,11 +48,10 @@ export const DateTimeString = {
 		return `${date.toISOString()}|${dt.timeZoneId}` as DateTimeString;
 	},
 
-	now(timezone?: TimezoneId | string): DateTimeString {
-		const tz = timezone ?? Temporal.Now.timeZoneId();
-		const dt = Temporal.Now.zonedDateTimeISO(tz);
-		return this.stringify(dt);
-	},
+now(timezone?: string): DateTimeString {
+		const tz = timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
+		return `${new Date().toISOString()}|${tz}` as DateTimeString;
+	}
 };
 ```
 

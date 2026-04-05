@@ -33,12 +33,12 @@ const posts = defineTable()
 	.version(type({ id: 'string', title: 'string', _v: '1' }))
 	.version(type({ id: 'string', title: 'string', views: 'number', _v: '2' }))
 	.migrate((row) => {
-		if (row._v === 1) return { ...row, views: 0, _v: 2 };
+    if (row._v === '1') return { ...row, views: 0, _v: '2' };
 		return row;
 	});
 
 // Define KV stores (simple schema + default)
-const theme = defineKv(type("'light' | 'dark'"), 'light');
+const theme = defineKv(type({ mode: "'light' | 'dark'" }), { mode: 'light' });
 
 // Define the workspace (pure schema definitions, no side effects)
 const workspace = defineWorkspace({
@@ -51,7 +51,7 @@ const workspace = defineWorkspace({
 const client = createWorkspace(workspace);
 
 // Read and write with full type safety
-client.tables.posts.set({ id: '1', title: 'Hello', views: 0, _v: 2 });
+client.tables.posts.set({ id: '1', title: 'Hello', views: 0, _v: '2' });
 const post = client.tables.posts.get('1');
 
 if (post.status === 'valid') {
@@ -122,7 +122,7 @@ import { createTables, createKv } from 'epicenter/static';
 
 const ydoc = new Y.Doc({ guid: 'shared-app' });
 const tables = createTables(ydoc, { posts });
-const kv = createKv(ydoc, { theme });
+// TODO: createKv requires YKeyValueLwwEncrypted ykv, not ydoc. Example: const kvArray = ydoc.getArray('kv'); const ykv = createEncryptedYkvLww(kvArray); const kv = createKv(ykv, { theme });
 
 tables.posts.set({ id: '1', title: 'Hello', views: 0, _v: 2 });
 ```

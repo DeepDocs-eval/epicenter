@@ -16,11 +16,10 @@ function createSomething({ db, cache }, options?) {
 Constants derived from dependencies and options. Everything the function needs that won't change after creation.
 
 ```typescript
-function createSyncProvider({ doc, url, getToken }: SyncProviderConfig) {
-	const ownsAwareness = !config.awareness;
-	const awareness = config.awareness ?? new Awareness(doc);
+function createSyncProvider({ doc, getToken, awareness: awarenessOption, url }: SyncProviderConfig) {
+	const ownsAwareness = !awarenessOption;
+	const awareness = awarenessOption ?? new Awareness(doc);
 	// ...
-}
 ```
 
 Dependencies can be destructured in the signature or in the body—both work. Signature destructuring is shorter for small dep lists. Body destructuring makes sense when you also need to pass the deps object around or the list is long.
@@ -103,7 +102,7 @@ function createSyncProvider(config: SyncProviderConfig) {
 		backoff.wake();
 	}
 
-	async function runLoop(myRunId: number) { /* ... */ }
+	async function runLoop() { /* ... */ }
 	async function attemptConnection(token, myRunId) { /* ... */ }
 
 	// Zone 4...

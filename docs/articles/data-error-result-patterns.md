@@ -65,10 +65,7 @@ Multiple states at the same level. Each state is "equal" with its own metadata.
 ```typescript
 // From table-helper.ts
 export type GetResult<TRow> =
-	| { status: 'valid'; row: TRow }
-	| { status: 'invalid'; id: string; error: RowValidationError }
-	| { status: 'not_found'; id: string };
-
+export type GetResult<TRow> = RowResult<TRow> | NotFoundResult;
 // Usage
 const result = tables.posts.get(id);
 switch (result.status) {
@@ -89,9 +86,10 @@ switch (result.status) {
 ```typescript
 // UpdateResult - two states, different semantics
 export type UpdateResult =
-	| { status: 'applied' }
-	| { status: 'not_found' };
-
+export type UpdateResult<TRow> =
+	| { status: 'updated'; row: TRow }
+	| NotFoundResult
+	| InvalidRowResult;
 // UpdateManyResult - three states with varying metadata
 export type UpdateManyResult =
 	| { status: 'all_applied'; applied: string[] }

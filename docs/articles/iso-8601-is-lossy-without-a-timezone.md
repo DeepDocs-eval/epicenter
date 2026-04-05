@@ -45,7 +45,7 @@ Unix timestamps are the most compact but completely unreadable. You can't glance
 A single string with the ISO UTC timestamp and the IANA timezone separated by a pipe. The pipe works because it's not a valid character in either ISO dates or IANA timezone names, so parsing is unambiguous: split on `|`, done.
 
 ```typescript
-type DateTimeString = `${UtcIsoString}|${TimezoneId}` & Brand<'DateTimeString'>;
+type DateTimeString = string & Brand<'DateTimeString'>;
 
 // Serialize
 const stored = `${date.toISOString()}|${timezone}`;

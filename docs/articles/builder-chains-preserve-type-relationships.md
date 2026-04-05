@@ -24,12 +24,11 @@ These types depend on _position_ in the array. JSON doesn't encode position-depe
 ## Why the Builder Works
 
 ```typescript
-defineTable()                          // TableBuilder<[]>
-  .version(schemaV1)                   // TableBuilder<[V1]>
+```typescript
+defineTable(schemaV1)                          // TableBuilder<[V1]>
   .version(schemaV2)                   // TableBuilder<[V1, V2]>
-  .migrate((row) => ...)               // row: V1 | V2, return: V2
+  .migrate((row: unknown) => ...)               // row: unknown, return: unknown
 ```
-
 Each `.version()` call _accumulates_ into a tuple. TypeScript tracks the tuple growing: `[]` → `[V1]` → `[V1, V2]`. When `.migrate()` is called, it can derive:
 
 ```

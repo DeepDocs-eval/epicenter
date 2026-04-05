@@ -27,7 +27,7 @@ And here's what `types.ts` contained (simplified):
 // types.ts
 
 // DateTime types
-export type DateTimeString = `${string}Z|${string}` & Brand<'DateTimeString'>;
+export type DateTimeString = string & Brand<'DateTimeString'>;
 
 // Validator types
 export type TableValidators<T> = {
@@ -147,9 +147,8 @@ And IDs:
 export type Id = string & { readonly __brand: 'Id' };
 
 export function generateId(): Id {
-	return crypto.randomUUID() as Id;
-}
-```
+		return nanoid10() as Id;
+	}
 
 The new file tree:
 

@@ -448,20 +448,29 @@ The y-indexeddb library's `IndexeddbPersistence` class exposes `whenSynced`. Epi
 Browser and Node workspace clients have different types to reflect this:
 
 ```typescript
-// Browser WorkspaceClient - includes whenReady
-type WorkspaceClient<TExports> = TExports & {
-	$ydoc: Y.Doc;
-	whenReady: Promise<void>; // Present in browser
+// WorkspaceClient (single shared type alias; browser/node differences handled via extensions or sub-properties)
+type WorkspaceClient<
+	TId extends string,
+	TTableDefinitions extends TableDefinitions,
+	TKvDefinitions extends KvDefinitions,
+	TAwarenessDefinitions extends AwarenessDefinitions,
+	TExtensions extends Record<string, unknown>,
+	TDocExtensions extends Record<string, unknown> = Record<string, unknown>,
+> = {
+	/** Workspace identifier */
+	id: TId;
+	/** The underlying Y.Doc instance */
+	ydoc: Y.Doc;
+	/** Workspace definitions for introspection */
+	definitions: {
+		tables: TTableDefinitions;
+		kv: TKvDefinitions;
+		awareness: TAwarenessDefinitions;
+	};
+	/** Typed table helpers — pure CRUD, no documentation needed (may include whenReady in browser) */
+	// tables, kv, etc. follow
 	destroy: () => Promise<void>;
 };
-
-// Node WorkspaceClient - no whenReady needed
-type WorkspaceClient<TExports> = TExports & {
-	$ydoc: Y.Doc;
-	// No whenReady - fully awaited at construction
-	destroy: () => Promise<void>;
-};
-```
 
 This type difference is intentional. Browser code can rely on `whenReady` existing; Node code doesn't need it because initialization is already awaited.
 

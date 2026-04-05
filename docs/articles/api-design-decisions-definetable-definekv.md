@@ -5,10 +5,7 @@ Designing an API is about trade-offs. Every choice closes some doors and opens o
 ## The Final API
 
 ```typescript
-const posts = defineTable('posts')
-  .version(schema1)
-  .version(schema2)
-  .version(schema3)
+const posts = defineTable(schema1, schema2, schema3)
   .migrate((row) => { ... });
 
 const tables = createTables(ydoc, { posts });

@@ -69,29 +69,26 @@ If Alice edits `title` and Bob edits `views` at the same time, one of their chan
 Here's how it looks in practice:
 
 ```typescript
-const posts = defineTable('posts')
-	.version(type({ id: 'string', title: 'string', _v: '1' }))
-	.version(type({ id: 'string', title: 'string', views: 'number', _v: '2' }))
-	.version(
-		type({
-			id: 'string',
-			title: 'string',
-			views: 'number',
-			tags: 'string[]',
-			_v: '3',
-		}),
-	)
-	.migrate((row) => {
-		switch (row._v) {
-			case 1:
-				return { ...row, views: 0, tags: [], _v: 3 };
-			case 2:
-				return { ...row, tags: [], _v: 3 };
-			case 3:
-				return row;
-		}
-	});
-```
+const posts = defineTable(
+	type({ id: 'string', title: 'string', _v: 1 }),
+	type({ id: 'string', title: 'string', views: 'number', _v: 2 }),
+	type({
+		id: 'string',
+		title: 'string',
+		views: 'number',
+		tags: 'string[]',
+		_v: 3,
+	}),
+).migrate((row) => {
+	switch (row._v) {
+		case 1:
+			return { ...row, views: 0, tags: [], _v: 3 };
+		case 2:
+			return { ...row, tags: [], _v: 3 };
+		case 3:
+			return row;
+	}
+});
 
 The `.version()` calls register schema versions. The `.migrate()` function receives any version and normalizes to the latest.
 

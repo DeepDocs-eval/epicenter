@@ -49,33 +49,29 @@ The migration function transforms old data to the latest schema on-the-fly. The 
 
 You define schemas with `.version()` and provide a migration function with `.migrate()`:
 
-```typescript
-const posts = defineTable('posts')
+const posts = defineTable(
 	// V1: Original schema
-	.version(
-		type({
-			id: 'string',
-			title: 'string',
-			_v: '1',
-		}),
-	)
+	type({
+		id: 'string',
+		title: 'string',
+		_v: '1',
+	}),
 	// V2: Added views counter
-	.version(
-		type({
-			id: 'string',
-			title: 'string',
-			views: 'number',
-			_v: '2',
-		}),
-	)
+	type({
+		id: 'string',
+		title: 'string',
+		views: 'number',
+		_v: '2',
+	}),
 	// V3: Added tags
-	.version(
-		type({
-			id: 'string',
-			title: 'string',
-			views: 'number',
-			tags: 'string[]',
-			_v: '3',
+	type({
+		id: 'string',
+		title: 'string',
+		views: 'number',
+		tags: 'string[]',
+		_v: '3',
+	}),
+);
 		}),
 	)
 	.migrate((row) => {
@@ -139,8 +135,8 @@ This makes migrations a clean switch statement:
 ```typescript
 .migrate((row) => {
   switch (row._v) {
-      case 1: return { ...row, views: 0, _v: 2 };
-      case 2: return row;
+    case '1': return { ...row, views: 0, _v: '2' };
+    case '2': return row;
   }
 })
 ```

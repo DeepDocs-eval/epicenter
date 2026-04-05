@@ -99,7 +99,7 @@ let lastMessageTime = Date.now();
 These three get set together in `onopen`, cleared together in `onclose`, and `lastMessageTime` gets touched in `onmessage`. Same tell: always read together, always written together.
 
 ```typescript
-function createLivenessMonitor(ws: WebSocketLike, WS: { readonly OPEN: number }) {
+function createLivenessMonitor(ws: WebSocket) {
   let pingInterval: ReturnType<typeof setInterval> | null = null;
   let livenessInterval: ReturnType<typeof setInterval> | null = null;
   let lastMessageTime = 0;
@@ -189,7 +189,7 @@ export function createSyncProvider(config: SyncProviderConfig): SyncProvider {
   let connectRun: Promise<void> | null = null;
   let websocket: WebSocketLike | null = null;
 
-  const status = createStatusEmitter<SyncStatus>('offline');
+  const status = createStatusEmitter<SyncStatus>({ phase: 'offline' });
   const backoff = createBackoff();
   // createLivenessMonitor is scoped per-connection inside attemptConnection
 

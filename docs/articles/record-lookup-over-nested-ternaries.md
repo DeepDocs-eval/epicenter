@@ -6,8 +6,10 @@ Always use `satisfies Record` for value mappings. It's exhaustive at compile tim
 
 This came from real code in `SyncStatusIndicator.svelte`:
 
-```typescript
-type SyncStatus = { phase: 'offline' } | { phase: 'connecting' } | { phase: 'connected' };
+type SyncStatus =
+	| { phase: 'offline' }
+	| { phase: 'connecting'; attempt: number; lastError?: unknown }
+	| { phase: 'connected' };
 
 const tooltip = $derived(
 	syncStatus.current.phase === 'connected'

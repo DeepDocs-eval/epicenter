@@ -102,17 +102,26 @@ Before refactoring, both `client.browser.ts` and `client.node.ts` had ~60 lines 
 
 ```typescript
 // DUPLICATED in both files
-export type WorkspaceClient<TActions> = TActions & {
-	/** The underlying YJS document... */
-	$ydoc: Y.Doc;
-	/** Direct access to workspace tables... */
-	$tables: Tables;
-	/** Direct access to workspace providers... */
-	$providers: Providers;
-	/** Async cleanup method... */
-	destroy: () => Promise<void>;
-	[Symbol.asyncDispose]: () => Promise<void>;
-	// Browser also had: whenReady: Promise<void>
+export type WorkspaceClient<
+	TId extends string,
+	TTableDefinitions extends TableDefinitions,
+	TKvDefinitions extends KvDefinitions,
+	TAwarenessDefinitions extends AwarenessDefinitions,
+	TExtensions extends Record<string, unknown>,
+	TDocExtensions extends Record<string, unknown> = Record<string, unknown>,
+> = {
+	/** Workspace identifier */
+	id: TId;
+	/** The underlying Y.Doc instance */
+	ydoc: Y.Doc;
+	/** Workspace definitions for introspection */
+	definitions: {
+		tables: TTableDefinitions;
+		kv: TKvDefinitions;
+		awareness: TAwarenessDefinitions;
+	};
+	/** Typed table helpers — pure CRUD, no documentation */
+	tables: Tables<TTableDefinitions>;
 };
 ```
 

@@ -52,13 +52,23 @@ When you "set" a key:
 2. Push a new `{ key, val }` object to the end of the array
 
 ```typescript
-set(key, val) {
-  this.doc.transact(() => {
+set(key: string, val: T) {
+  this.pending.set(key, {key, val});
+  this.pendingDeletes.delete(key);
+
+  const doWork = () => {
     if (this.map.has(key)) {
-      this.delete(key);  // Remove old entry
+      this.deleteEntryByKey(key);  // Remove old entry
     }
     this.yarray.push([{ key, val }]);  // Append new entry
-  });
+  };
+
+  if (this.isInTransaction()) {
+    doWork();
+  } else {
+    this.doc.transact(doWork);
+  }
+  // Observer updates map
 }
 ```
 
@@ -67,7 +77,10 @@ The trick: `Y.Array` deletions are structural. When you delete an array element 
 YKeyValue maintains a local JavaScript `Map` for O(1) reads:
 
 ```typescript
-get(key) {
+get(key: string): T | undefined {
+  if (this.pendingDeletes.has(key)) return undefined;
+  const pending = this.pending.get(key);
+  if (pending) return pending.val;
   return this.map.get(key)?.val;
 }
 ```
