@@ -79,10 +79,23 @@ For this, we go through the Standard JSON Schema interface:
 export function standardSchemaToJsonSchema(
   schema: StandardJSONSchemaV1,
 ): Record<string, unknown> {
-  return schema['~standard'].jsonSchema.input({
-    target: 'draft-2020-12',
-    libraryOptions: { fallback: ARKTYPE_FALLBACK },
+  const { data } = trySync({
+    try: () =>
+      schema['~standard'].jsonSchema.input({
+        target: 'draft-2020-12',
+        libraryOptions: {
+          fallback: ARKTYPE_FALLBACK,
+        },
+      }),
+    catch: (e) => {
+      console.warn(
+        '[standardSchemaToJsonSchema] Conversion failure, using permissive fallback:',
+        e,
+      );
+      return Ok({});
+    },
   });
+  return data;
 }
 ```
 

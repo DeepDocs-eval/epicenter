@@ -53,7 +53,7 @@ After auditing a real codebase, these patterns reliably predict abstraction leak
 
 **Raw mutations inside batch callbacks.** `handle.batch(() => ytext.insert(...))` means the consumer is doing CRDT operations the handle should encapsulate. `batch()` is for grouping *high-level* operations (multiple `table.delete()` calls), not for wrapping raw Y.js mutations.
 
-**Internal helpers on the public API.** Functions like `parseSheetFromCsv(columns: Y.Map<Y.Map<string>>, rows: Y.Map<Y.Map<string>>)` on a package's root export. The parameters are raw Y.js types—you can't call this function without first breaking the abstraction to get those references.
+**Internal helpers on the public API.** Functions like `parseSheetFromCsv(csv: string, { columns: Y.Map<Y.Map<string>>, rows: Y.Map<Y.Map<string>> })` on a package's root export. The parameters are raw Y.js types—you can't call this function without first breaking the abstraction to get those references.
 
 **`ydoc.getArray()`/`ydoc.getMap()` in consumer code.** Direct Y.Doc access outside infrastructure (sync, persistence) bypasses every typed API you built.
 

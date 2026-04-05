@@ -94,28 +94,37 @@ Here's the core of YKeyValue:
 
 ```typescript
 class YKeyValue<T> {
-  private yarray: Y.Array<{ key: string; val: T }>;
-  private map: Map<string, { key: string; val: T }>;  // In-memory index
+  readonly yarray: Y.Array<{ key: string; val: T }>;
+  readonly doc: Y.Doc;
+  map: Map<string, { key: string; val: T }>;  // In-memory index (written by observer only)
 
   set(key: string, val: T): void {
     const entry = { key, val };
-    const existing = this.map.get(key);
 
-    this.doc.transact(() => {
-      // Delete old entry if exists
-      if (existing) {
-        const index = this.findIndex(key);
-        if (index !== -1) this.yarray.delete(index);
+    // Track in pending for immediate get() consistency
+    // this.pending.set(key, entry);
+    // this.pendingDeletes.delete(key);
+
+    const doWork = () => {
+      if (this.map.has(key)) {
+        this.deleteEntryByKey(key);
       }
-      // Append new entry
       this.yarray.push([entry]);
-    });
+    };
 
-    this.map.set(key, entry);
+    if (/* this.isInTransaction() */) {
+      doWork();
+    } else {
+      this.doc.transact(doWork);
+    }
+    // DO NOT update this.map - observer is sole writer
   }
 
   get(key: string): T | undefined {
-    return this.map.get(key)?.val;  // O(1) via in-memory index
+    // if (this.pendingDeletes.has(key)) return undefined;
+    // const pending = this.pending.get(key);
+    // if (pending) return pending.val;
+    return this.map.get(key)?.val;
   }
 }
 ```

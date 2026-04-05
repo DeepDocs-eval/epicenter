@@ -139,8 +139,7 @@ The `generate` prefix distinguishes these from `create` factories that compose f
 A richer form is a companion object with utility methods:
 
 ```typescript
-export type DateTimeString = `${DateIsoString}|${TimezoneId}` &
-	Brand<'DateTimeString'>;
+export type DateTimeString = string &
 export const DateTimeString = {
 	is(value: unknown): value is DateTimeString {
 		/* ... */

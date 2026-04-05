@@ -4,8 +4,7 @@ TypeScript classes have a duplication problem that factory functions don't. It's
 
 ## The Constructor Tax
 
-Here's a real class from a file system indexer:
-
+Here's a typical class from a file system indexer:
 ```typescript
 class FileSystemIndex {
   private unobserve: () => void;

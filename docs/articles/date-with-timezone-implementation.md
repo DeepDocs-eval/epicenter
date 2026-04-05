@@ -31,7 +31,7 @@ We built a robust type system around this storage format using TypeScript brande
 export type UtcIsoString = string & Brand<'UtcIsoString'>;
 
 // IANA timezone identifier
-export type TimezoneId = string & Brand<'TimezoneId'>;
+export type TimezoneId = string;
 
 // The storage format (what goes in the database)
 export type DateTimeWithTimezoneString = `${UtcIsoString}|${TimezoneId}` &

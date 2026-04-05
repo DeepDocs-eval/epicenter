@@ -99,22 +99,10 @@ Workspaces import what they need:
 // comments/epicenter.config.ts
 import usersWorkspace from '../users/epicenter.config';
 import postsWorkspace from '../posts/epicenter.config';
-
 export default defineWorkspace({
   id: 'f7g8h9i0-j1k2-3456-lmno-pq7890123456',  // Globally unique
-  dependencies: [usersWorkspace, postsWorkspace],
-
-  methods: ({ plugins, tables }) => ({
-    createComment: async ({ userId, postId, content }) => {
-      // Direct access to dependencies
-      const user = await plugins.users.getUserById({ userId });
-      const post = await plugins.posts.getPostById({ postId });
-
-      return tables.comments.upsert({ ... });
-    }
-  })
+  tables: {},  // Define tables here; dependencies composed via imports
 });
-```
 
 No central node. No aggregator. Just workspaces depending on workspaces. And here's the key: imports can use full paths from anywhere on your machine.
 

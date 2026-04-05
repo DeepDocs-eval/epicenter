@@ -71,7 +71,7 @@ This pattern already exists in the Epicenter codebase. The sync server's `protoc
 
 ```typescript
 // packages/workspace/src/server/sync/protocol.ts
-// "Separates protocol handling from transport (WebSocket handling)."
+// packages/sync/src/protocol.ts
 export function encodeSyncStep1({ doc }: { doc: Y.Doc }): Uint8Array { ... }
 export function decodeSyncMessage(data: Uint8Array): DecodedSyncMessage { ... }
 export function handleSyncMessage({ decoder, doc, origin }): Uint8Array | null { ... }
@@ -94,4 +94,4 @@ _Sources:_
 - [y-sweet](https://github.com/jamsocket/y-sweet): sans-IO Rust sync server with Axum and Cloudflare Workers adapters
 - [sans-io.readthedocs.io](https://sans-io.readthedocs.io/how-to-sans-io.html): the original pattern documentation
 - [Firezone: Sans-IO in Rust](https://www.firezone.dev/blog/sans-io): practical application of sans-IO in production Rust
-- [`packages/workspace/src/server/sync/protocol.ts`](../packages/workspace/src/server/sync/protocol.ts): sans-IO protocol layer in this codebase
+- [`packages/sync/src/protocol.ts`](../packages/sync/src/protocol.ts): sans-IO protocol layer in this codebase

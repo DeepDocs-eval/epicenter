@@ -20,7 +20,7 @@ Use `DateTimeString` (a branded string) as the canonical intermediate representa
 
 ```typescript
 // Storage format unchanged: "2024-01-01T20:00:00.000Z|America/New_York"
-type DateTimeString = `${DateIsoString}|${TimezoneId}` & Brand<'DateTimeString'>;
+type DateTimeString = string & Brand<'DateTimeString'>;
 
 // Companion object with JSON-style API
 const DateTimeString = {

@@ -8,12 +8,15 @@
 
 ```typescript
 function updateYTextFromString(yText: Y.Text, newString: string): void {
+  const doc = yText.doc;
+  if (!doc) throw new Error('Y.Text must be attached to a Y.Doc');
+
   const currentString = yText.toString();
   if (currentString === newString) return;
 
   const diffs = diffChars(currentString, newString);
 
-  yText.doc!.transact(() => {
+  doc.transact(() => {
     let index = 0;
     for (const change of diffs) {
       if (change.added) {

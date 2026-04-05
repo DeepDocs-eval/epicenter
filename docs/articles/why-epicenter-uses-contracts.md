@@ -64,14 +64,6 @@ const blogWorkspace = defineWorkspace({
 	tables: {
 		posts: { id: id(), title: text(), published: boolean({ default: false }) },
 	},
-	actions: {
-		publishPost: defineMutation({
-			input: type({ id: 'string' }),
-			output: type({ success: 'boolean' }),
-			description: 'Publish a blog post',
-			// No handler here - just the schema
-		}),
-	},
 });
 
 // Handler binding: Only where Bun runtime exists
@@ -205,11 +197,15 @@ The editing experience doesn't require the runtime execution environment.
 The `WorkspaceContract` type is intentionally simple:
 
 ```typescript
-type WorkspaceContract<TId, TSchema, TActions> = {
+type WorkspaceDefinition<
+	TId extends string,
+	TTableDefinitions extends TableDefinitions = Record<string, never>,
+	TKvDefinitions extends KvDefinitions = Record<string, never>,
+	TAwarenessDefinitions extends AwarenessDefinitions = Record<string, never>> = {
 	id: TId;
-	tables: TSchema;
-	actions: TActions;
-	description?: string;
+	tables: TTableDefinitions;
+	kv: TKvDefinitions;
+	awareness: TAwarenessDefinitions;
 };
 ```
 

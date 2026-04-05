@@ -90,30 +90,15 @@ When you use `bind:value` with a getter and setter function, the type flows thro
 ## Query Factories
 
 You could import `defineQuery` and `defineMutation` separately and use them with any query client:
+You could import `defineQuery` and `defineMutation` separately:
 
 ```typescript
 // Before
-import { QueryClient } from '@tanstack/svelte-query';
-import { defineQuery, defineMutation } from 'wellcrafted/query';
-
-const queryClient = new QueryClient();
+import { defineQuery, defineMutation } from '../shared/actions';
 
 // defineQuery and defineMutation are separate imports
-// Nothing ties them to this specific queryClient
+// Nothing ties them together
 ```
-
-The `createQueryFactories` factory takes a query client and returns both functions bound to it:
-
-```typescript
-// After
-import { QueryClient } from '@tanstack/svelte-query';
-import { createQueryFactories } from 'wellcrafted/query';
-
-const queryClient = new QueryClient();
-const { defineQuery, defineMutation } = createQueryFactories(queryClient);
-```
-
-All queries and mutations defined with these functions share the same client. You can't accidentally use a query definition with the wrong client.
 
 ## When to Use It
 

@@ -12,13 +12,24 @@ Here's what actually runs:
 
 ```typescript
 // Y.Text layer: CRDT operations (data)
-function updateYTextFromString(yText: Y.Text, newContent: string) {
-  const diff = diffChars(yText.toString(), newContent);
-  yText.doc.transact(() => {
-    diff.forEach(op => {
-      if (op.removed) yText.delete(op.position, op.count);
-      if (op.added) yText.insert(op.position, op.value);
-    });
+function updateYTextFromString(yText: Y.Text, newString: string) {
+  const doc = yText.doc;
+  if (!doc) throw new Error('Y.Text must be attached to a Y.Doc');
+  const currentString = yText.toString();
+  if (currentString === newString) return;
+  const diffs = diffChars(currentString, newString);
+  doc.transact(() => {
+    let index = 0;
+    for (const change of diffs) {
+      if (change.added) {
+        yText.insert(index, change.value);
+        index += change.value.length;
+      } else if (change.removed) {
+        yText.delete(index, change.value.length);
+      } else {
+        index += change.value.length;
+      }
+    }
   });
 }
 
